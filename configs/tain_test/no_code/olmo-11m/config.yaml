@@ -65,8 +65,8 @@ evaluators:
   type: downstream
 - label: mmlu_other_mc_5shot
   type: downstream
-- label: squad
-  type: downstream
+# - label: squad
+#   type: downstream
 - label: mathqa
   type: downstream
 - label: math_algebra

@@ -5,7 +5,7 @@ tasks:
   - /bin/bash
   - -c
   - source scripts/beaker/warm_hf_cache.sh && torchrun --nnodes 1 --nproc-per-node
-    2 --rdzv_id=101 --rdzv_backend=c10d scripts/train.py configs/tain/no_code/olmo-11m/config.yaml
+    2 --rdzv_id=101 --rdzv_backend=c10d scripts/train.py configs/tain_test/no_code/olmo-11m/config.yaml
   command:
   - bash
   - /gantry/entrypoint.sh
@@ -32,7 +32,7 @@ tasks:
   - name: GITHUB_REPO
     value: taidnguyen/OLMo
   - name: GIT_REF
-    value: 1845de3c8f6d76d438a41147eeb71c55c135d16f
+    value: 1b2309c71d8d270a3d0963d26b6025938dad9908
   - name: LOG_FILTER_TYPE
     value: local_rank0_only
   - name: OMP_NUM_THREADS
