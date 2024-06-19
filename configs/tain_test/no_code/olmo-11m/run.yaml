@@ -32,7 +32,7 @@ tasks:
   - name: GITHUB_REPO
     value: taidnguyen/OLMo
   - name: GIT_REF
-    value: 3fa683b238deef503606952d099ea7ec423c3f53
+    value: 1845de3c8f6d76d438a41147eeb71c55c135d16f
   - name: LOG_FILTER_TYPE
     value: local_rank0_only
   - name: OMP_NUM_THREADS
