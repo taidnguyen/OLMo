@@ -128,7 +128,7 @@ scheduler:
   t_warmup: 100
   units: tokens
 seed: 6198
-sharded_checkpointer: olmo_core
+sharded_checkpointer: null
 speed_monitor:
   window_size: 1
 stop_at: 11931
