@@ -69,7 +69,7 @@ fsdp:
   precision: mixed
   wrapping_strategy: by_block_and_size
 global_train_batch_size: 1024
-load_path: s3://ai2-llm/checkpoints/OLMo-small/mitchish1/step1267000/
+load_path: null
 max_duration: 50e9T
 max_grad_norm: 1.0
 max_grad_norm_ratio: null
@@ -128,7 +128,7 @@ scheduler:
   t_warmup: 100
   units: tokens
 seed: 6198
-sharded_checkpointer: null
+sharded_checkpointer: olmo_core
 speed_monitor:
   window_size: 1
 stop_at: 11931
