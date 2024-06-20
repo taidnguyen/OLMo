@@ -291,7 +291,7 @@ optimizer:
   name: adamw
   weight_decay: 0.1
 precision: amp_bf16
-remote_save_folder: null
+remote_save_folder: s3://ai2-llm/checkpoints/benb/olmo-1b/no_math_olmo-1b
 reset_optimizer_state: false
 reset_trainer_state: false
 restore_dataloader: false
