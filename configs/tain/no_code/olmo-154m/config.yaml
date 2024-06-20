@@ -697,8 +697,8 @@ reset_trainer_state: false
 restore_dataloader: false
 run_name: no_code_olmo-154m
 save_folder: /data/tain
-save_interval: 50
-save_interval_unsharded: 5000
+save_interval: 750
+save_interval_unsharded: 50
 save_num_checkpoints_to_keep: 9
 save_num_unsharded_checkpoints_to_keep: -1
 save_overwrite: true
