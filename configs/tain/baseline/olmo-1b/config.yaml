@@ -285,6 +285,7 @@ fsdp:
   wrapping_strategy: by_block_and_size
 global_train_batch_size: 1024
 load_path: s3://ai2-llm/checkpoints/OLMo-small/mitchish1/step1267000/
+load_path_sharded_checkpointer: olmo_core
 max_duration: 50e9T
 max_grad_norm: 1.0
 max_grad_norm_ratio: null
@@ -304,13 +305,15 @@ model:
   init_fn: mitchell
   layer_norm_type: default
   max_sequence_length: 2048
-  mlp_hidden_size: 8
+  mlp_hidden_size: null
+  mlp_ratio: 8
   multi_query_attention: false
   n_heads: 16
   n_layers: 16
   pad_token_id: 1
   residual_dropout: 0.0
   rope: true
+  rope_full_precision: true
   vocab_size: 50280
   weight_tying: true
 no_pre_train_checkpoint: true
@@ -329,8 +332,8 @@ reset_trainer_state: false
 restore_dataloader: false
 run_name: baseline_olmo-1b
 save_folder: runs/baseline_olmo-1b
-save_interval: 750
-save_interval_unsharded: 50
+save_interval: 1000
+save_interval_unsharded: 1000
 save_num_checkpoints_to_keep: 10
 save_num_unsharded_checkpoints_to_keep: 10
 save_overwrite: false
@@ -349,7 +352,7 @@ speed_monitor:
 stop_at: 11931
 time_limit: null
 tokenizer:
-  identifier: tokenizers/allenai_eleuther-ai-gpt-neox-20b-pii-special.json
+  identifier: tokenizers/allenai_gpt-neox-olmo-dolma-v1_5.json
   truncate_direction: right
 wandb:
   entity: predict-data-ablations
