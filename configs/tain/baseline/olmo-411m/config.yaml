@@ -663,46 +663,6 @@ evaluators:
   type: downstream
 - label: mmlu_other_mc_5shot
   type: downstream
-- label: squad
-  type: downstream
-- label: mathqa
-  type: downstream
-- label: math_algebra
-  type: downstream
-- label: math_counting_and_prob
-  type: downstream
-- label: math_geometry
-  type: downstream
-- label: math_intermediate_algebra
-  type: downstream
-- label: math_num_theory
-  type: downstream
-- label: math_prealgebra
-  type: downstream
-- label: math_precalc
-  type: downstream
-- label: math_asdiv
-  type: downstream
-- label: arithmetic_2da
-  type: downstream
-- label: arithmetic_2ds
-  type: downstream
-- label: arithmetic_3da
-  type: downstream
-- label: arithmetic_3ds
-  type: downstream
-- label: arithmetic_4da
-  type: downstream
-- label: arithmetic_4ds
-  type: downstream
-- label: arithmetic_5da
-  type: downstream
-- label: arithmetic_5ds
-  type: downstream
-- label: arithmetic_2dm
-  type: downstream
-- label: arithmetic_1dc
-  type: downstream
 fsdp:
   precision: mixed
   wrapping_strategy: by_block_and_size

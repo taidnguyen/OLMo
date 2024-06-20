@@ -10,95 +10,6 @@ data:
   - s3://ai2-llm/preprocessed/olmo-mix/v1_6-decontaminated/pes2o/gpt-neox-olmo-dolma-v1_5/part-00-00000.npy
   - s3://ai2-llm/preprocessed/olmo-mix/v1_6-decontaminated/pes2o/gpt-neox-olmo-dolma-v1_5/part-01-00000.npy
   - s3://ai2-llm/preprocessed/olmo-mix/v1_6-decontaminated/pes2o/gpt-neox-olmo-dolma-v1_5/part-02-00000.npy
-  - s3://ai2-llm/preprocessed/megawika/v1/gpt-neox-olmo-dolma-v1_5/part-00-00000.npy
-  - s3://ai2-llm/preprocessed/megawika/v1/gpt-neox-olmo-dolma-v1_5/part-01-00000.npy
-  - s3://ai2-llm/preprocessed/megawika/v1/gpt-neox-olmo-dolma-v1_5/part-01-00001.npy
-  - s3://ai2-llm/preprocessed/megawika/v1/gpt-neox-olmo-dolma-v1_5/part-02-00000.npy
-  - s3://ai2-llm/preprocessed/megawika/v1/gpt-neox-olmo-dolma-v1_5/part-02-00001.npy
-  - s3://ai2-llm/preprocessed/megawika/v1/gpt-neox-olmo-dolma-v1_5/part-03-00000.npy
-  - s3://ai2-llm/preprocessed/megawika/v1/gpt-neox-olmo-dolma-v1_5/part-03-00001.npy
-  - s3://ai2-llm/preprocessed/megawika/v1/gpt-neox-olmo-dolma-v1_5/part-04-00000.npy
-  - s3://ai2-llm/preprocessed/megawika/v1/gpt-neox-olmo-dolma-v1_5/part-04-00001.npy
-  - s3://ai2-llm/preprocessed/megawika/v1/gpt-neox-olmo-dolma-v1_5/part-05-00000.npy
-  - s3://ai2-llm/preprocessed/megawika/v1/gpt-neox-olmo-dolma-v1_5/part-05-00001.npy
-  - s3://ai2-llm/preprocessed/megawika/v1/gpt-neox-olmo-dolma-v1_5/part-06-00000.npy
-  - s3://ai2-llm/preprocessed/megawika/v1/gpt-neox-olmo-dolma-v1_5/part-06-00001.npy
-  - s3://ai2-llm/preprocessed/megawika/v1/gpt-neox-olmo-dolma-v1_5/part-07-00000.npy
-  - s3://ai2-llm/preprocessed/megawika/v1/gpt-neox-olmo-dolma-v1_5/part-07-00001.npy
-  - s3://ai2-llm/preprocessed/megawika/v1/gpt-neox-olmo-dolma-v1_5/part-08-00000.npy
-  - s3://ai2-llm/preprocessed/megawika/v1/gpt-neox-olmo-dolma-v1_5/part-08-00001.npy
-  - s3://ai2-llm/preprocessed/megawika/v1/gpt-neox-olmo-dolma-v1_5/part-09-00000.npy
-  - s3://ai2-llm/preprocessed/megawika/v1/gpt-neox-olmo-dolma-v1_5/part-09-00001.npy
-  - s3://ai2-llm/preprocessed/megawika/v1/gpt-neox-olmo-dolma-v1_5/part-10-00000.npy
-  - s3://ai2-llm/preprocessed/megawika/v1/gpt-neox-olmo-dolma-v1_5/part-10-00001.npy
-  - s3://ai2-llm/preprocessed/megawika/v1/gpt-neox-olmo-dolma-v1_5/part-11-00000.npy
-  - s3://ai2-llm/preprocessed/megawika/v1/gpt-neox-olmo-dolma-v1_5/part-11-00001.npy
-  - s3://ai2-llm/preprocessed/megawika/v1/gpt-neox-olmo-dolma-v1_5/part-12-00000.npy
-  - s3://ai2-llm/preprocessed/megawika/v1/gpt-neox-olmo-dolma-v1_5/part-12-00001.npy
-  - s3://ai2-llm/preprocessed/megawika/v1/gpt-neox-olmo-dolma-v1_5/part-13-00000.npy
-  - s3://ai2-llm/preprocessed/megawika/v1/gpt-neox-olmo-dolma-v1_5/part-13-00001.npy
-  - s3://ai2-llm/preprocessed/megawika/v1/gpt-neox-olmo-dolma-v1_5/part-14-00000.npy
-  - s3://ai2-llm/preprocessed/megawika/v1/gpt-neox-olmo-dolma-v1_5/part-14-00001.npy
-  - s3://ai2-llm/preprocessed/megawika/v1/gpt-neox-olmo-dolma-v1_5/part-15-00000.npy
-  - s3://ai2-llm/preprocessed/megawika/v1/gpt-neox-olmo-dolma-v1_5/part-16-00000.npy
-  - s3://ai2-llm/preprocessed/megawika/v1/gpt-neox-olmo-dolma-v1_5/part-16-00001.npy
-  - s3://ai2-llm/preprocessed/megawika/v1/gpt-neox-olmo-dolma-v1_5/part-17-00000.npy
-  - s3://ai2-llm/preprocessed/megawika/v1/gpt-neox-olmo-dolma-v1_5/part-17-00001.npy
-  - s3://ai2-llm/preprocessed/megawika/v1/gpt-neox-olmo-dolma-v1_5/part-18-00000.npy
-  - s3://ai2-llm/preprocessed/megawika/v1/gpt-neox-olmo-dolma-v1_5/part-18-00001.npy
-  - s3://ai2-llm/preprocessed/megawika/v1/gpt-neox-olmo-dolma-v1_5/part-19-00000.npy
-  - s3://ai2-llm/preprocessed/megawika/v1/gpt-neox-olmo-dolma-v1_5/part-19-00001.npy
-  - s3://ai2-llm/preprocessed/megawika/v1/gpt-neox-olmo-dolma-v1_5/part-20-00000.npy
-  - s3://ai2-llm/preprocessed/megawika/v1/gpt-neox-olmo-dolma-v1_5/part-20-00001.npy
-  - s3://ai2-llm/preprocessed/megawika/v1/gpt-neox-olmo-dolma-v1_5/part-21-00000.npy
-  - s3://ai2-llm/preprocessed/megawika/v1/gpt-neox-olmo-dolma-v1_5/part-21-00001.npy
-  - s3://ai2-llm/preprocessed/megawika/v1/gpt-neox-olmo-dolma-v1_5/part-22-00000.npy
-  - s3://ai2-llm/preprocessed/megawika/v1/gpt-neox-olmo-dolma-v1_5/part-22-00001.npy
-  - s3://ai2-llm/preprocessed/megawika/v1/gpt-neox-olmo-dolma-v1_5/part-23-00000.npy
-  - s3://ai2-llm/preprocessed/megawika/v1/gpt-neox-olmo-dolma-v1_5/part-23-00001.npy
-  - s3://ai2-llm/preprocessed/megawika/v1/gpt-neox-olmo-dolma-v1_5/part-23-00002.npy
-  - s3://ai2-llm/preprocessed/megawika/v1/gpt-neox-olmo-dolma-v1_5/part-24-00000.npy
-  - s3://ai2-llm/preprocessed/megawika/v1/gpt-neox-olmo-dolma-v1_5/part-24-00001.npy
-  - s3://ai2-llm/preprocessed/megawika/v1/gpt-neox-olmo-dolma-v1_5/part-25-00000.npy
-  - s3://ai2-llm/preprocessed/megawika/v1/gpt-neox-olmo-dolma-v1_5/part-25-00001.npy
-  - s3://ai2-llm/preprocessed/megawika/v1/gpt-neox-olmo-dolma-v1_5/part-26-00000.npy
-  - s3://ai2-llm/preprocessed/megawika/v1/gpt-neox-olmo-dolma-v1_5/part-26-00001.npy
-  - s3://ai2-llm/preprocessed/megawika/v1/gpt-neox-olmo-dolma-v1_5/part-27-00000.npy
-  - s3://ai2-llm/preprocessed/megawika/v1/gpt-neox-olmo-dolma-v1_5/part-27-00001.npy
-  - s3://ai2-llm/preprocessed/megawika/v1/gpt-neox-olmo-dolma-v1_5/part-28-00000.npy
-  - s3://ai2-llm/preprocessed/megawika/v1/gpt-neox-olmo-dolma-v1_5/part-29-00000.npy
-  - s3://ai2-llm/preprocessed/megawika/v1/gpt-neox-olmo-dolma-v1_5/part-30-00000.npy
-  - s3://ai2-llm/preprocessed/megawika/v1/gpt-neox-olmo-dolma-v1_5/part-30-00001.npy
-  - s3://ai2-llm/preprocessed/megawika/v1/gpt-neox-olmo-dolma-v1_5/part-31-00000.npy
-  - s3://ai2-llm/preprocessed/megawika/v1/gpt-neox-olmo-dolma-v1_5/part-31-00001.npy
-  - s3://ai2-llm/preprocessed/olmo-mix/v1_6-decontaminated/wiki/gpt-neox-olmo-dolma-v1_5/part-0-00000.npy
-  - s3://ai2-llm/preprocessed/olmo-mix/v1_6-decontaminated/wiki/gpt-neox-olmo-dolma-v1_5/part-1-00000.npy
-  - s3://ai2-llm/preprocessed/redpajama_v1_decon_fix/stackexchange/gpt-neox-olmo-dolma-v1_5/part-00-00000.npy
-  - s3://ai2-llm/preprocessed/redpajama_v1_decon_fix/stackexchange/gpt-neox-olmo-dolma-v1_5/part-01-00000.npy
-  - s3://ai2-llm/preprocessed/redpajama_v1_decon_fix/stackexchange/gpt-neox-olmo-dolma-v1_5/part-02-00000.npy
-  - s3://ai2-llm/preprocessed/redpajama_v1_decon_fix/stackexchange/gpt-neox-olmo-dolma-v1_5/part-03-00000.npy
-  - s3://ai2-llm/preprocessed/redpajama_v1_decon_fix/stackexchange/gpt-neox-olmo-dolma-v1_5/part-04-00000.npy
-  - s3://ai2-llm/preprocessed/redpajama_v1_decon_fix/stackexchange/gpt-neox-olmo-dolma-v1_5/part-05-00000.npy
-  - s3://ai2-llm/preprocessed/redpajama_v1_decon_fix/stackexchange/gpt-neox-olmo-dolma-v1_5/part-06-00000.npy
-  - s3://ai2-llm/preprocessed/redpajama_v1_decon_fix/stackexchange/gpt-neox-olmo-dolma-v1_5/part-07-00000.npy
-  - s3://ai2-llm/preprocessed/redpajama_v1_decon_fix/stackexchange/gpt-neox-olmo-dolma-v1_5/part-08-00000.npy
-  - s3://ai2-llm/preprocessed/redpajama_v1_decon_fix/stackexchange/gpt-neox-olmo-dolma-v1_5/part-09-00000.npy
-  - s3://ai2-llm/preprocessed/redpajama_v1_decon_fix/stackexchange/gpt-neox-olmo-dolma-v1_5/part-10-00000.npy
-  - s3://ai2-llm/preprocessed/redpajama_v1_decon_fix/stackexchange/gpt-neox-olmo-dolma-v1_5/part-11-00000.npy
-  - s3://ai2-llm/preprocessed/redpajama_v1_decon_fix/stackexchange/gpt-neox-olmo-dolma-v1_5/part-12-00000.npy
-  - s3://ai2-llm/preprocessed/redpajama_v1_decon_fix/stackexchange/gpt-neox-olmo-dolma-v1_5/part-13-00000.npy
-  - s3://ai2-llm/preprocessed/redpajama_v1_decon_fix/stackexchange/gpt-neox-olmo-dolma-v1_5/part-14-00000.npy
-  - s3://ai2-llm/preprocessed/redpajama_v1_decon_fix/stackexchange/gpt-neox-olmo-dolma-v1_5/part-15-00000.npy
-  - s3://ai2-llm/preprocessed/redpajama_v1_decon_fix/stackexchange/gpt-neox-olmo-dolma-v1_5/part-16-00000.npy
-  - s3://ai2-llm/preprocessed/redpajama_v1_decon_fix/stackexchange/gpt-neox-olmo-dolma-v1_5/part-17-00000.npy
-  - s3://ai2-llm/preprocessed/redpajama_v1_decon_fix/stackexchange/gpt-neox-olmo-dolma-v1_5/part-18-00000.npy
-  - s3://ai2-llm/preprocessed/redpajama_v1_decon_fix/stackexchange/gpt-neox-olmo-dolma-v1_5/part-19-00000.npy
-  - s3://ai2-llm/preprocessed/redpajama_v1_decon_fix/stackexchange/gpt-neox-olmo-dolma-v1_5/part-20-00000.npy
-  - s3://ai2-llm/preprocessed/redpajama_v1_decon_fix/stackexchange/gpt-neox-olmo-dolma-v1_5/part-21-00000.npy
-  - s3://ai2-llm/preprocessed/redpajama_v1_decon_fix/stackexchange/gpt-neox-olmo-dolma-v1_5/part-22-00000.npy
-  - s3://ai2-llm/preprocessed/redpajama_v1_decon_fix/stackexchange/gpt-neox-olmo-dolma-v1_5/part-23-00000.npy
-  - s3://ai2-llm/preprocessed/redpajama_v1_decon_fix/stackexchange/gpt-neox-olmo-dolma-v1_5/part-24-00000.npy
-  - s3://ai2-llm/preprocessed/redpajama_v1_decon_fix/stackexchange/gpt-neox-olmo-dolma-v1_5/part-25-00000.npy
   - s3://ai2-llm/preprocessed/redpajama_arxiv_only/v1_decontaminated/gpt-neox-olmo-dolma-v1_5/part-00-00000.npy
   - s3://ai2-llm/preprocessed/redpajama_arxiv_only/v1_decontaminated/gpt-neox-olmo-dolma-v1_5/part-01-00000.npy
   - s3://ai2-llm/preprocessed/redpajama_arxiv_only/v1_decontaminated/gpt-neox-olmo-dolma-v1_5/part-02-00000.npy
@@ -136,6 +47,38 @@ data:
   - s3://ai2-llm/preprocessed/starcoder/v0_decontaminated_doc_only/gpt-neox-olmo-dolma-v1_5/part-00-00001.npy
   - s3://ai2-llm/preprocessed/starcoder/v0_decontaminated_doc_only/gpt-neox-olmo-dolma-v1_5/part-01-00000.npy
   - s3://ai2-llm/preprocessed/starcoder/v0_decontaminated_doc_only/gpt-neox-olmo-dolma-v1_5/part-02-00000.npy
+  - s3://ai2-llm/preprocessed/proof-pile-2/v0_decontaminated/algebraic-stack/train/gpt-neox-olmo-dolma-v1_5/part-00-00000.npy
+  - s3://ai2-llm/preprocessed/proof-pile-2/v0_decontaminated/algebraic-stack/train/gpt-neox-olmo-dolma-v1_5/part-01-00000.npy
+  - s3://ai2-llm/preprocessed/proof-pile-2/v0_decontaminated/algebraic-stack/train/gpt-neox-olmo-dolma-v1_5/part-02-00000.npy
+  - s3://ai2-llm/preprocessed/proof-pile-2/v0_decontaminated/algebraic-stack/train/gpt-neox-olmo-dolma-v1_5/part-03-00000.npy
+  - s3://ai2-llm/preprocessed/proof-pile-2/v0_decontaminated/algebraic-stack/train/gpt-neox-olmo-dolma-v1_5/part-04-00000.npy
+  - s3://ai2-llm/preprocessed/proof-pile-2/v0_decontaminated/algebraic-stack/train/gpt-neox-olmo-dolma-v1_5/part-05-00000.npy
+  - s3://ai2-llm/preprocessed/proof-pile-2/v0_decontaminated/algebraic-stack/train/gpt-neox-olmo-dolma-v1_5/part-06-00000.npy
+  - s3://ai2-llm/preprocessed/proof-pile-2/v0_decontaminated/algebraic-stack/train/gpt-neox-olmo-dolma-v1_5/part-07-00000.npy
+  - s3://ai2-llm/preprocessed/proof-pile-2/v0_decontaminated/algebraic-stack/train/gpt-neox-olmo-dolma-v1_5/part-08-00000.npy
+  - s3://ai2-llm/preprocessed/proof-pile-2/v0_decontaminated/open-web-math/train/gpt-neox-olmo-dolma-v1_5/part-00-00000.npy
+  - s3://ai2-llm/preprocessed/proof-pile-2/v0_decontaminated/open-web-math/train/gpt-neox-olmo-dolma-v1_5/part-01-00000.npy
+  - s3://ai2-llm/preprocessed/proof-pile-2/v0_decontaminated/open-web-math/train/gpt-neox-olmo-dolma-v1_5/part-02-00000.npy
+  - s3://ai2-llm/preprocessed/proof-pile-2/v0_decontaminated/open-web-math/train/gpt-neox-olmo-dolma-v1_5/part-03-00000.npy
+  - s3://ai2-llm/preprocessed/proof-pile-2/v0_decontaminated/open-web-math/train/gpt-neox-olmo-dolma-v1_5/part-04-00000.npy
+  - s3://ai2-llm/preprocessed/proof-pile-2/v0_decontaminated/open-web-math/train/gpt-neox-olmo-dolma-v1_5/part-05-00000.npy
+  - s3://ai2-llm/preprocessed/proof-pile-2/v0_decontaminated/open-web-math/train/gpt-neox-olmo-dolma-v1_5/part-06-00000.npy
+  - s3://ai2-llm/preprocessed/proof-pile-2/v0_decontaminated/open-web-math/train/gpt-neox-olmo-dolma-v1_5/part-07-00000.npy
+  - s3://ai2-llm/preprocessed/proof-pile-2/v0_decontaminated/open-web-math/train/gpt-neox-olmo-dolma-v1_5/part-08-00000.npy
+  - s3://ai2-llm/preprocessed/proof-pile-2/v0_decontaminated/open-web-math/train/gpt-neox-olmo-dolma-v1_5/part-09-00000.npy
+  - s3://ai2-llm/preprocessed/proof-pile-2/v0_decontaminated/open-web-math/train/gpt-neox-olmo-dolma-v1_5/part-10-00000.npy
+  - s3://ai2-llm/preprocessed/proof-pile-2/v0_decontaminated/open-web-math/train/gpt-neox-olmo-dolma-v1_5/part-11-00000.npy
+  - s3://ai2-llm/preprocessed/proof-pile-2/v0_decontaminated/open-web-math/train/gpt-neox-olmo-dolma-v1_5/part-12-00000.npy
+  - s3://ai2-llm/preprocessed/redpajama_stackexchange_only/v1_decontaminated/gpt-neox-olmo-dolma-v1_5/part-00-00000.npy
+  - s3://ai2-llm/preprocessed/redpajama_stackexchange_only/v1_decontaminated/gpt-neox-olmo-dolma-v1_5/part-01-00000.npy
+  - s3://ai2-llm/preprocessed/redpajama_stackexchange_only/v1_decontaminated/gpt-neox-olmo-dolma-v1_5/part-02-00000.npy
+  - s3://ai2-llm/preprocessed/redpajama_stackexchange_only/v1_decontaminated/gpt-neox-olmo-dolma-v1_5/part-03-00000.npy
+  - s3://ai2-llm/preprocessed/redpajama_stackexchange_only/v1_decontaminated/gpt-neox-olmo-dolma-v1_5/part-04-00000.npy
+  - s3://ai2-llm/preprocessed/redpajama_stackexchange_only/v1_decontaminated/gpt-neox-olmo-dolma-v1_5/part-05-00000.npy
+  - s3://ai2-llm/preprocessed/redpajama_stackexchange_only/v1_decontaminated/gpt-neox-olmo-dolma-v1_5/part-06-00000.npy
+  - s3://ai2-llm/preprocessed/redpajama_stackexchange_only/v1_decontaminated/gpt-neox-olmo-dolma-v1_5/part-07-00000.npy
+  - s3://ai2-llm/preprocessed/redpajama_stackexchange_only/v1_decontaminated/gpt-neox-olmo-dolma-v1_5/part-08-00000.npy
+  - s3://ai2-llm/preprocessed/redpajama_stackexchange_only/v1_decontaminated/gpt-neox-olmo-dolma-v1_5/part-09-00000.npy
   - s3://ai2-llm/preprocessed/tulu_flan/v2-decontaminated-60M-shots_all-upweight_1-dialog_false-sep_newline/train/gpt-neox-olmo-dolma-v1_5/part-00-00000.npy
   - s3://ai2-llm/preprocessed/tulu_flan/v2-decontaminated-60M-shots_all-upweight_1-dialog_false-sep_newline/train/gpt-neox-olmo-dolma-v1_5/part-01-00000.npy
   - s3://ai2-llm/preprocessed/tulu_flan/v2-decontaminated-60M-shots_all-upweight_1-dialog_false-sep_newline/train/gpt-neox-olmo-dolma-v1_5/part-02-00000.npy
@@ -295,8 +238,8 @@ remote_save_folder: null
 reset_optimizer_state: false
 reset_trainer_state: false
 restore_dataloader: false
-run_name: no_math_olmo-1b
-save_folder: runs/no_math_olmo-1b
+run_name: no_wiki_olmo-1b
+save_folder: runs/no_wiki_olmo-1b
 save_interval: 1000
 save_interval_unsharded: 5000
 save_num_checkpoints_to_keep: 9
@@ -321,5 +264,5 @@ tokenizer:
   truncate_direction: right
 wandb:
   entity: predict-data-ablations
-  name: no_math_olmo-1b
+  name: no_wiki_olmo-1b
   project: predict-data-ablations
