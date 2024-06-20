@@ -300,8 +300,8 @@ run_name: no_flan_olmo-1b
 save_folder: runs/no_flan_olmo-1b
 save_interval: 750
 save_interval_unsharded: 50
-save_num_checkpoints_to_keep: 9
-save_num_unsharded_checkpoints_to_keep: -1
+save_num_checkpoints_to_keep: 10
+save_num_unsharded_checkpoints_to_keep: 10
 save_overwrite: false
 scheduler:
   alpha_f: 0.1
