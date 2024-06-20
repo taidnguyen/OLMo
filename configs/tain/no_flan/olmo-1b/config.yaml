@@ -298,7 +298,7 @@ reset_trainer_state: false
 restore_dataloader: false
 run_name: no_flan_olmo-1b
 save_folder: runs/no_flan_olmo-1b
-save_interval: 1000
+save_interval: 50
 save_interval_unsharded: 5000
 save_num_checkpoints_to_keep: 9
 save_num_unsharded_checkpoints_to_keep: -1
