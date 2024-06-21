@@ -262,7 +262,10 @@ model:
   alibi: false
   attention_dropout: 0.0
   attention_layer_norm: false
+  attention_layer_norm_with_affine: false
+  bias_for_layer_norm: false
   block_type: sequential
+  clip_qkv: 8
   d_model: 2048
   embedding_dropout: 0.0
   embedding_size: 50304
@@ -272,6 +275,7 @@ model:
   init_device: meta
   init_fn: mitchell
   layer_norm_type: default
+  layer_norm_with_affine: false
   max_sequence_length: 2048
   mlp_hidden_size: null
   mlp_ratio: 8
@@ -308,10 +312,10 @@ save_overwrite: false
 scheduler:
   alpha_f: 0.1
   grad_clip_warmup_factor: 5
-  grad_clip_warmup_steps: 20
+  grad_clip_warmup_steps: 0
   name: cosine_with_warmup
   t_max: 3000000000000.0
-  t_warmup: 100
+  t_warmup: 0
   units: tokens
 seed: 6198
 sharded_checkpointer: olmo_core

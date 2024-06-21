@@ -709,7 +709,7 @@ precision: amp_bf16
 remote_save_folder: s3://ai2-llm/checkpoints/benb/${run_name}
 reset_optimizer_state: false
 reset_trainer_state: false
-restore_dataloader: false
+restore_dataloader: true
 run_name: baseline_olmo-79m
 save_folder: /data/tain
 save_interval: 1000
