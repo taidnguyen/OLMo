@@ -305,14 +305,14 @@ precision: amp_bf16
 remote_save_folder: s3://ai2-llm/checkpoints/benb/olmo-1b/no_math_olmo-1b
 reset_optimizer_state: false
 reset_trainer_state: false
-restore_dataloader: true
+restore_dataloader: false
 run_name: no_math_olmo-1b
 save_folder: runs/no_math_olmo-1b
 save_interval: 1000
 save_interval_unsharded: 1000
 save_num_checkpoints_to_keep: -1
 save_num_unsharded_checkpoints_to_keep: -1
-save_overwrite: false
+save_overwrite: true
 scheduler:
   alpha_f: 0.1
   grad_clip_warmup_factor: 5
