@@ -281,7 +281,7 @@ fsdp:
   wrapping_strategy: by_block_and_size
 global_train_batch_size: 1024
 load_path: s3://ai2-llm/checkpoints/OLMo-small/mitchish1/step1267000/
-max_duration: 50e9T
+max_duration: 1ep
 max_grad_norm: 1.0
 max_grad_norm_ratio: null
 model:
@@ -353,7 +353,6 @@ seed: 6198
 sharded_checkpointer: olmo_core
 speed_monitor:
   window_size: 1
-stop_at: 11931
 time_limit: null
 tokenizer:
   identifier: tokenizers/allenai_gpt-neox-olmo-dolma-v1_5.json
