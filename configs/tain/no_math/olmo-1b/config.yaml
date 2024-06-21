@@ -263,6 +263,7 @@ model:
   attention_layer_norm: false
   attention_layer_norm_with_affine: false
   bias_for_layer_norm: false
+  block_group_size: 1
   block_type: sequential
   clip_qkv: 8
   d_model: 2048
@@ -280,6 +281,7 @@ model:
   mlp_ratio: 8
   multi_query_attention: false
   n_heads: 16
+  n_kv_heads: null
   n_layers: 16
   pad_token_id: 1
   residual_dropout: 0.0
