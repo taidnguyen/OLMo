@@ -294,9 +294,12 @@ optimizer:
   betas:
   - 0.9
   - 0.95
+  decay_embeddings: true
+  decay_norm_and_bias: true
   learning_rate: 0.0004
   metrics_log_interval: 10
   name: adamw
+  no_decay_norm_and_bias: null
   weight_decay: 0.1
 precision: amp_bf16
 remote_save_folder: s3://ai2-llm/checkpoints/benb/olmo-1b/no_math_olmo-1b
