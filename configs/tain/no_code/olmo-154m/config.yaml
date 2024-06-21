@@ -653,7 +653,6 @@ fsdp:
   wrapping_strategy: by_block_and_size
 global_train_batch_size: 1024
 load_path: null
-load_path_sharded_checkpointer: olmo_core
 max_duration: 50e9T
 max_grad_norm: 1.0
 max_grad_norm_ratio: null
@@ -700,8 +699,8 @@ run_name: no_code_olmo-154m
 save_folder: /data/tain
 save_interval: 1000
 save_interval_unsharded: 1000
-save_num_checkpoints_to_keep: 10
-save_num_unsharded_checkpoints_to_keep: 10
+save_num_checkpoints_to_keep: -1
+save_num_unsharded_checkpoints_to_keep: -1
 save_overwrite: true
 scheduler:
   alpha_f: 0

@@ -281,7 +281,6 @@ fsdp:
   wrapping_strategy: by_block_and_size
 global_train_batch_size: 1024
 load_path: s3://ai2-llm/checkpoints/OLMo-small/mitchish1/step1267000/
-load_path_sharded_checkpointer: olmo_core
 max_duration: 50e9T
 max_grad_norm: 1.0
 max_grad_norm_ratio: null
@@ -311,7 +310,7 @@ model:
   rope: true
   rope_full_precision: true
   vocab_size: 50280
-  weight_tying: true
+  weight_tying: false
 no_pre_train_checkpoint: true
 optimizer:
   betas:
@@ -325,13 +324,13 @@ precision: amp_bf16
 remote_save_folder: s3://ai2-llm/checkpoints/benb/olmo-1b/no_code_olmo-1b
 reset_optimizer_state: false
 reset_trainer_state: false
-restore_dataloader: false
+restore_dataloader: true
 run_name: no_code_olmo-1b
 save_folder: runs/no_code_olmo-1b
 save_interval: 1000
 save_interval_unsharded: 1000
-save_num_checkpoints_to_keep: 10
-save_num_unsharded_checkpoints_to_keep: 10
+save_num_checkpoints_to_keep: -1
+save_num_unsharded_checkpoints_to_keep: -1
 save_overwrite: false
 scheduler:
   alpha_f: 0.1
