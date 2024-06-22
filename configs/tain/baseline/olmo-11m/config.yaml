@@ -678,16 +678,20 @@ model:
   alibi_bias_max: 8.0
   attention_dropout: 0.0
   attention_layer_norm: false
+  attention_layer_norm_with_affine: false
+  bias_for_layer_norm: false
   block_type: sequential
+  clip_qkv: 8.0
   d_model: 96
   embedding_dropout: 0.0
   embedding_size: 50304
   eos_token_id: 0
-  flash_attention: false
+  flash_attention: true
   include_bias: false
   init_device: meta
   init_fn: mitchell
   layer_norm_type: default
+  layer_norm_with_affine: false
   max_sequence_length: 2048
   mlp_ratio: 4
   multi_query_attention: false
@@ -703,7 +707,7 @@ optimizer:
   betas:
   - 0.9
   - 0.95
-  learning_rate: 0.0005
+  learning_rate: 0.0004
   name: adamw
   weight_decay: 0.1
 precision: amp_bf16
@@ -726,7 +730,6 @@ seed: 61394
 sharded_checkpointer: olmo_core
 speed_monitor:
   window_size: 1
-stop_at: 11931
 time_limit: null
 tokenizer:
   identifier: tokenizers/allenai_gpt-neox-olmo-dolma-v1_5.json
