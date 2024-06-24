@@ -636,10 +636,10 @@ save_num_checkpoints_to_keep: -1
 save_num_unsharded_checkpoints_to_keep: -1
 save_overwrite: true
 scheduler:
-  alpha_f: 0
+  alpha_f: 0.1
   grad_clip_warmup_factor: 5
   grad_clip_warmup_steps: 1666666666
-  name: linear_with_warmup
+  name: cosine_with_warmup
   t_max: 50000000000
   t_warmup: 3333333333
   units: tokens
