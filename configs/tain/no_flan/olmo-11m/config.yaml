@@ -653,8 +653,8 @@ reset_trainer_state: false
 restore_dataloader: false
 run_name: no_flan_olmo-11m
 save_folder: /data/tain
-save_interval: 1000
-save_interval_unsharded: 1000
+save_interval: 2000
+save_interval_unsharded: 2000
 save_num_checkpoints_to_keep: -1
 save_num_unsharded_checkpoints_to_keep: -1
 save_overwrite: true
