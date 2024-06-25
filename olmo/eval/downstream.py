@@ -1339,6 +1339,194 @@ class NaturalQuestionsCELoss(ICLMultiChoiceTaskDataset):
         return "Answer:"
 
 
+class MathQA(ICLMultiChoiceTaskDataset):
+    """Prompt for MRPC is formed using "Sentence 1: SENTENCE1\nSentence 2: SENTENCE2\nQuestion: Do both sentences mean the same thing?\nAnswer:"
+    acc/F1, random at 50% acc. (GLUE)
+    continuations: yes and no
+
+    {
+        'sentence1': 'In fiction : Edward P. Jones ( " The Known World " ) and Scott Spencer ( " A Ship Made of Paper " ) .',
+        'sentence2': 'The fifth nominee for fiction is Scott Spencer , for A Ship Made of Paper .',
+        'label': 0
+    }
+    """
+
+    metric_type = "f1"
+
+    def __init__(self, tokenizer, dataset_path="glue", dataset_name="mrpc"):
+        super().__init__(
+            tokenizer=tokenizer,
+            dataset_path=dataset_path,
+            dataset_name=dataset_name,
+        )
+
+    @classmethod
+    def preprocess(cls, string: str) -> str:
+        string = string.replace(" n't", "n't")
+        string = string.replace(" )", ")")
+        string = string.replace("( ", "(")
+        string = string.replace('" ', '"')
+        string = string.replace(' "', '"')
+
+        string = re.sub(r" (['.,])", r"\1", string)
+
+        return string
+
+    def doc_to_text(self, doc):
+        return (
+            "Sentence 1: "
+            + self.preprocess(doc["sentence1"])
+            + "\nSentence 2: "
+            + self.preprocess(doc["sentence2"])
+            + "\nQuestion: Do both sentences mean the same thing?\nAnswer:"
+        )
+
+    def doc_to_continuations(self, doc):
+        del doc
+        # add spaces in front of continuation
+        return [" yes", " no"]
+
+    def doc_to_label(self, doc):
+        # if doc['label'] is True, return index of " yes" which is 0
+        if doc["label"]:
+            return 0
+        else:
+            return 1
+
+    def doc_to_domain_conditional(self, doc):
+        del doc
+        return "Answer:"
+
+import os, json, pathlib
+class HendrycksMath(datasets.GeneratorBasedBuilder):
+    """
+    12,500 competition Math problems
+    8 Math question types, 5 levels of difficulty
+    {'problem': 'A board game spinner is divided into three parts labeled $A$, $B$  and $C$. The probability of the spinner landing on $A$ is $\\frac{1}{3}$ and the probability of the spinner landing on $B$ is $\\frac{5}{12}$.  What is the probability of the spinner landing on $C$? Express your answer as a common fraction.',
+    'level': 'Level 1',
+    'type': 'Counting & Probability',
+    'solution': 'The spinner is guaranteed to land on exactly one of the three regions, so we know that the sum of the probabilities of it landing in each region will be 1. If we let the probability of it landing in region $C$ be $x$, we then have the equation $1 = \\frac{5}{12}+\\frac{1}{3}+x$, from which we have $x=\\boxed{\\frac{1}{4}}$.'}
+    """
+    VERSION = datasets.Version("1.0.0")
+
+    BUILDER_CONFIGS = [
+        datasets.BuilderConfig(name=name, version=VERSION, description=name)
+        for name in ["algebra", "counting_and_prob", "geometry", "intermediate_algebra", "num_theory", "prealgebra", "precalc", "asdiv"]
+    ]
+
+    def _info(self):
+        return datasets.DatasetInfo(
+            description="12,500 competition Math problems with 8 types and 5 levels of difficulty.",
+            features=datasets.Features(
+                {
+                    "problem": datasets.Value("string"),
+                    "level": datasets.Value("string"),
+                    "type": datasets.Value("string"),
+                    "solution": datasets.Value("string"),
+                }
+            ),
+        )
+
+    def _split_generators(self, dl_manager):
+        urls = {"data": "https://path_to_data"}
+        data_dir = dl_manager.download_and_extract(urls["data"])
+        return [
+            datasets.SplitGenerator(
+                name=datasets.Split.TRAIN,
+                gen_kwargs={
+                    "basepath": os.path.join(data_dir, "train"),
+                    "split": "train",
+                },
+            ),
+            datasets.SplitGenerator(
+                name=datasets.Split.TEST,
+                gen_kwargs={
+                    "basepath": os.path.join(data_dir, "test"),
+                    "split": "test",
+                },
+            ),
+        ]
+
+    def _generate_examples(self, basepath, split):
+        key = 0
+        for file in sorted(pathlib.Path(basepath).iterdir()):
+            with open(file, "r", encoding="utf-8") as f:
+                data = json.load(f)
+                yield key, {
+                    "problem": data["problem"],
+                    "level": data["level"],
+                    "type": data["type"],
+                    "solution": data["solution"],
+                }
+                key += 1
+
+    def __init__(self, tokenizer, dataset_path="hendrycks/competition_math", dataset_name=None, split="validation"):
+        self.dataset_path = dataset_path
+        self.dataset_name = dataset_name
+        self.split = split
+        self.tokenizer = tokenizer
+        self.dev_set = {}
+
+        if dataset_name:
+            dataset_names = [dataset_name]
+        else:
+            dataset_names = ["algebra", "counting_and_prob", "geometry", "intermediate_algebra", "num_theory", "prealgebra", "precalc", "asdiv"]
+
+        for name in dataset_names:
+            self.dev_set[name] = datasets.load_dataset(
+                path=self.dataset_path, name=name, split=self.split, trust_remote_code=True
+            )
+
+    @classmethod
+    def remove_boxed(s):
+        if "\\boxed " in s:
+            left = "\\boxed "
+            assert s[: len(left)] == left
+            return s[len(left) :]
+
+        left = "\\boxed{"
+
+        assert s[: len(left)] == left
+        assert s[-1] == "}"
+
+        return s[len(left) : -1]
+
+    @classmethod
+    def last_boxed_only_string(string):
+        idx = string.rfind("\\boxed")
+        if "\\boxed " in string:
+            return "\\boxed " + string.split("\\boxed ")[-1].split("$")[0]
+        if idx < 0:
+            idx = string.rfind("\\fbox")
+            if idx < 0:
+                return None
+
+        i = idx
+        right_brace_idx = None
+        num_left_braces_open = 0
+        while i < len(string):
+            if string[i] == "{":
+                num_left_braces_open += 1
+            if string[i] == "}":
+                num_left_braces_open -= 1
+                if num_left_braces_open == 0:
+                    right_brace_idx = i
+                    break
+            i += 1
+
+        if right_brace_idx is None:
+            retval = None
+        else:
+            retval = string[idx : right_brace_idx + 1]
+
+        return retval
+
+    def doc_to_text(self, doc):
+        problem = doc["problem"].strip()
+        solution = doc["solution"].strip()
+        return f"Problem: {problem}\nAnswer: {solution}\n"
+
+
 label_to_task_map = {
     "piqa": PIQA,
     "hellaswag": HellaSwag,
