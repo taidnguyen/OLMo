@@ -567,24 +567,6 @@ evaluators:
   type: downstream
 - label: mmlu_other_mc_5shot
   type: downstream
-- label: mathqa
-  type: downstream
-- label: basic_arithmetic
-  type: downstream
-- label: math_algebra
-  type: downstream
-- label: math_counting_and_prob
-  type: downstream
-- label: math_geometry
-  type: downstream
-- label: math_intermediate_algebra
-  type: downstream
-- label: math_num_theory
-  type: downstream
-- label: math_prealgebra
-  type: downstream
-- label: math_precalc
-  type: downstream
 fsdp:
   precision: mixed
   wrapping_strategy: by_block_and_size

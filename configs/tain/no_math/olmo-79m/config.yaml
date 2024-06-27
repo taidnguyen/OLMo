@@ -585,30 +585,12 @@ evaluators:
   type: downstream
 - label: mmlu_other_mc_5shot
   type: downstream
-- label: mathqa
-  type: downstream
-- label: basic_arithmetic
-  type: downstream
-- label: math_algebra
-  type: downstream
-- label: math_counting_and_prob
-  type: downstream
-- label: math_geometry
-  type: downstream
-- label: math_intermediate_algebra
-  type: downstream
-- label: math_num_theory
-  type: downstream
-- label: math_prealgebra
-  type: downstream
-- label: math_precalc
-  type: downstream
 fsdp:
   precision: mixed
   wrapping_strategy: by_block_and_size
 global_train_batch_size: 512
 load_path: null
-max_duration: 50e9T
+max_duration: 25e9T
 max_grad_norm: 1.0
 max_grad_norm_ratio: null
 model:
@@ -659,24 +641,24 @@ reset_trainer_state: false
 restore_dataloader: false
 run_name: no_math_olmo-79m
 save_folder: /data/tain
-save_interval: 2000
-save_interval_unsharded: 2000
+save_interval: 500
+save_interval_unsharded: 500
 save_num_checkpoints_to_keep: -1
 save_num_unsharded_checkpoints_to_keep: -1
 save_overwrite: true
 scheduler:
   alpha_f: 0.1
   grad_clip_warmup_factor: 5
-  grad_clip_warmup_steps: 1666666666
+  grad_clip_warmup_steps: 833333333
   name: cosine_with_warmup
-  t_max: 50000000000
-  t_warmup: 3333333333
+  t_max: 25000000000
+  t_warmup: 1666666666
   units: tokens
 seed: 61394
 sharded_checkpointer: olmo_core
 speed_monitor:
   window_size: 1
-stop_at: 47693
+stop_at: 23851
 time_limit: null
 tokenizer:
   identifier: tokenizers/allenai_gpt-neox-olmo-dolma-v1_5.json
