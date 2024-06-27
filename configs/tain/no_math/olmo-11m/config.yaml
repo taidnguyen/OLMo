@@ -545,37 +545,6 @@ eval_interval: ${save_interval}
 eval_on_load: true
 eval_subset_num_batches: -1
 evaluators:
-- data:
-    datasets:
-      4chan-validation:
-      - s3://ai2-llm/eval-data/perplexity/v2_small_gptneox20b/4chan/val.npy
-      c4_100_domains-validation:
-      - s3://ai2-llm/eval-data/perplexity/v2_small_gptneox20b/c4_100_domains/val.npy
-      c4_en-validation:
-      - s3://ai2-llm/eval-data/perplexity/v2_small_gptneox20b/c4_en/val.npy
-      gab-validation:
-      - s3://ai2-llm/eval-data/perplexity/v2_small_gptneox20b/gab/val.npy
-      ice-validation:
-      - s3://ai2-llm/eval-data/perplexity/v2_small_gptneox20b/ice/val.npy
-      m2d2_s2orc-validation:
-      - s3://ai2-llm/eval-data/perplexity/v2_small_gptneox20b/m2d2_s2orc/val.npy
-      m2d2_wiki-validation:
-      - s3://ai2-llm/eval-data/perplexity/v2_small_gptneox20b/m2d2_wiki/val.npy
-      manosphere-validation:
-      - s3://ai2-llm/eval-data/perplexity/v2_small_gptneox20b/manosphere/val.npy
-      mc4_en-validation:
-      - s3://ai2-llm/eval-data/perplexity/v2_small_gptneox20b/mc4_en/val.npy
-      pile-validation:
-      - s3://ai2-llm/eval-data/perplexity/v2_small_gptneox20b/pile/val.npy
-      ptb-validation:
-      - s3://ai2-llm/eval-data/perplexity/v2_small_gptneox20b/ptb/val.npy
-      twitterAEE-validation:
-      - s3://ai2-llm/eval-data/perplexity/v2_small_gptneox20b/twitterAEE/val.npy
-      wikitext_103-validation:
-      - s3://ai2-llm/eval-data/perplexity/v2_small_gptneox20b/wikitext_103/val.npy
-    drop_last: true
-    num_workers: 0
-  label: all-small-ppl-validation
 - label: piqa
   type: downstream
 - label: hellaswag
@@ -616,6 +585,24 @@ evaluators:
   type: downstream
 - label: mmlu_other_mc_5shot
   type: downstream
+- label: mathqa
+  type: downstream
+- label: basic_arithmetic
+  type: downstream
+- label: math_algebra
+  type: downstream
+- label: math_counting_and_prob
+  type: downstream
+- label: math_geometry
+  type: downstream
+- label: math_intermediate_algebra
+  type: downstream
+- label: math_num_theory
+  type: downstream
+- label: math_prealgebra
+  type: downstream
+- label: math_precalc
+  type: downstream
 fsdp:
   precision: mixed
   wrapping_strategy: by_block_and_size
@@ -651,6 +638,7 @@ model:
   pad_token_id: 1
   residual_dropout: 0.0
   rope: false
+  rope_full_precision: true
   vocab_size: 50280
   weight_tying: false
 no_pre_train_checkpoint: true
@@ -672,7 +660,7 @@ restore_dataloader: false
 run_name: no_math_olmo-11m
 save_folder: /data/tain
 save_interval: 6000
-save_interval_unsharded: 2000
+save_interval_unsharded: 6000
 save_num_checkpoints_to_keep: -1
 save_num_unsharded_checkpoints_to_keep: -1
 save_overwrite: true
