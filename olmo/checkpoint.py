@@ -1577,9 +1577,9 @@ class LocalShardedCheckpointer(Checkpointer):
         # Load local optim state.
         if load_optimizer_state:
             log.info("Loading local optimizer state...")
-            optim_state = load_state_dict(
-                load_path, f"optim/rank{get_global_rank()}.pt", local_cache=local_cache, map_location="cpu"
-            )
+            # optim_state = load_state_dict(
+            #     load_path, f"optim/rank{get_global_rank()}.pt", local_cache=local_cache, map_location="cpu"
+            # )
             # HACK/TODO (epwalsh): When we use adaptive clipping we track the 'grad_norm_exp_avg' for every param
             # in every rank, and keep this in the optimizer state. But this causes issues when loading the
             # state since torch sees the state is non-empty for some params which would normally be empty,
