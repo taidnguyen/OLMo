@@ -638,7 +638,7 @@ fsdp:
   wrapping_strategy: by_block_and_size
 global_train_batch_size: 512
 load_path: null
-max_duration: 6e9T
+max_duration: 20e9T
 max_grad_norm: 1.0
 max_grad_norm_ratio: null
 model:
@@ -697,16 +697,16 @@ save_overwrite: true
 scheduler:
   alpha_f: 0.1
   grad_clip_warmup_factor: 5
-  grad_clip_warmup_steps: 200000000
+  grad_clip_warmup_steps: 666666666
   name: cosine_with_warmup
-  t_max: 6000000000
-  t_warmup: 400000000
+  t_max: 20000000000
+  t_warmup: 1333333333
   units: tokens
 seed: 61394
 sharded_checkpointer: olmo_core
 speed_monitor:
   window_size: 1
-stop_at: 5732
+stop_at: 19083
 time_limit: null
 tokenizer:
   identifier: tokenizers/allenai_gpt-neox-olmo-dolma-v1_5.json
