@@ -1,6 +1,8 @@
 import abc
 import logging
 import re
+import os, json, pathlib, requests, zipfile, io
+
 from typing import Any, ClassVar, Dict, List, Optional, Sequence, Union
 
 import datasets
@@ -11,6 +13,10 @@ from torchmetrics import Metric
 
 from ..tokenizer import Tokenizer
 
+from .hendrycks_math_util import (
+    HENDRYCKS_STOP_SEQS, is_equiv, remove_boxed, last_boxed_only_string, strip_string
+)
+
 log = logging.getLogger(__name__)
 
 
@@ -18,71 +24,99 @@ class ICLMetric(Metric):
     # update method does not require access to global metric state
     full_state_update: bool = False
 
-    def __init__(self, metric_type="acc") -> None:
-        """metric_type: f1, acc, len_norm, pmi_dc, ce_loss"""
+    def __init__(self, tokenizer: Tokenizer=None, metric_type="acc") -> None:
+        """
+        Tai adds: exact_match_hendrycks_math
+        metric_type: f1, acc, len_norm, pmi_dc, ce_loss"""
         super().__init__(sync_on_compute=True)
 
         self.metric_type = metric_type
+        self.tokenizer = tokenizer
 
         self.add_state("loglikelihoods", default=[], dist_reduce_fx=None)
         self.add_state("labels", default=[], dist_reduce_fx=None)
+        self.add_state("preds", default=[], dist_reduce_fx=None)
+        self.add_state("exact_match_scores", default=[], dist_reduce_fx=None)
 
-    def reset(
-        self,
-    ):
+    def reset(self):
         self.loglikelihoods = []
         self.labels = []
+        self.exact_match_scores = []
 
     def update(self, batch: Dict[str, Any], lm_logits: torch.Tensor, dc_lm_logits=None):
-        lm_logits = F.log_softmax(lm_logits, dim=-1)
+        if "exact_match" in self.metric_type:
+            gen_ids = batch["generation_ids"].tolist()
+            for idx, gen_id in enumerate(gen_ids):
+                # Flatten the list if necessary
+                if isinstance(gen_id[0], list):
+                    gen_id = [token for sublist in gen_id for token in sublist]
+                pred_answer = self.tokenizer.decode(gen_id, skip_special_tokens=True)
+                label_answer = self.tokenizer.decode(batch["label_gen_ids"][idx], skip_special_tokens=True)
 
-        if self.metric_type == "pmi_dc":
-            assert dc_lm_logits is not None, "PMI_DC acc type selected but no domain conditional logits provided"
+                if "hendrycks_math" in self.metric_type:
+                    try:
+                        pred_answer = remove_boxed(last_boxed_only_string(pred_answer))
+                        label_answer = remove_boxed(last_boxed_only_string(label_answer))
+                    except:
+                        pass
+                    # print(f"pred_answer: {pred_answer}, label_answer: {label_answer}")
+                    exact_match_score = 1 if is_equiv(pred_answer, label_answer) else 0
+                else:
+                    exact_match_score = 1 if pred_answer == label_answer else 0
+                self.exact_match_scores.append(exact_match_score)
+        else:
+            lm_logits = F.log_softmax(lm_logits, dim=-1)
 
-        for idx, (doc_id, cont_id) in enumerate(zip(batch["doc_id"], batch["cont_id"])):
-            # [cont_len]: continuation is padded for batching
-            cont_tokens = batch["continuation"][idx][: batch["cont_len"][idx]]
-            # get logits from LM for the continuation: [cont_len, vocab]
-            # batch['input_ids'][idx] -> ctx + cont + padding
-            # -1 in both indices: lm_logits will be left shited 1 pos as 0th pos in input generates next token in the 0th pos of lm_logits
-            lm_cont_logits = lm_logits[idx][
-                batch["ctx_len"][idx] - 1 : batch["ctx_len"][idx] + batch["cont_len"][idx] - 1
-            ]
-
-            log_likelihood: torch.Tensor
             if self.metric_type == "pmi_dc":
-                assert dc_lm_logits is not None
-                # get domain conditional continuation logits: [cont_len, vocab]
-                dc_lm_cont_logits = dc_lm_logits[idx][
-                    batch["dc_len"][idx] - 1 : batch["dc_len"][idx] + batch["cont_len"][idx] - 1
+                assert dc_lm_logits is not None, "PMI_DC acc type selected but no domain conditional logits provided"
+
+            for idx, (doc_id, cont_id) in enumerate(zip(batch["doc_id"], batch["cont_id"])):
+                # [cont_len]: continuation is padded for batching
+                cont_tokens = batch["continuation"][idx][: batch["cont_len"][idx]]
+                # get logits from LM for the continuation: [cont_len, vocab]
+                # batch['input_ids'][idx] -> ctx + cont + padding
+                # -1 in both indices: lm_logits will be left shited 1 pos as 0th pos in input generates next token in the 0th pos of lm_logits
+                lm_cont_logits = lm_logits[idx][
+                    batch["ctx_len"][idx] - 1 : batch["ctx_len"][idx] + batch["cont_len"][idx] - 1
                 ]
 
-                # gather log-probs at continuation token indices but divide by domain conditional prob
-                log_likelihood = (
-                    torch.gather(lm_cont_logits, 1, cont_tokens.unsqueeze(-1)).sum()
-                    / torch.gather(dc_lm_cont_logits, 1, cont_tokens.unsqueeze(-1)).sum()
-                )
-            elif self.metric_type == "acc" or self.metric_type == "f1":
-                # gather log-probs at continuation token indices
-                log_likelihood = torch.gather(lm_cont_logits, 1, cont_tokens.unsqueeze(-1)).sum()
-            elif self.metric_type == "len_norm" or self.metric_type == "ce_loss":
-                log_likelihood = (
-                    torch.gather(lm_cont_logits, 1, cont_tokens.unsqueeze(-1)).sum() / batch["cont_str_len"][idx]
-                )
-                if self.metric_type == "ce_loss":
-                    log_likelihood = -log_likelihood
-            else:
-                raise ValueError(self.metric_type)
+                log_likelihood: torch.Tensor
+                if self.metric_type == "pmi_dc":
+                    assert dc_lm_logits is not None
+                    # get domain conditional continuation logits: [cont_len, vocab]
+                    dc_lm_cont_logits = dc_lm_logits[idx][
+                        batch["dc_len"][idx] - 1 : batch["dc_len"][idx] + batch["cont_len"][idx] - 1
+                    ]
 
-            # because metric states cannot be dict/list of tuples, store this tuple as tensor: (doc_id, cont_id, metric_state)
-            self.loglikelihoods.append(
-                torch.Tensor((doc_id, cont_id, log_likelihood)).to(batch["continuation"][idx].device)
-            )
-            self.labels.append(
-                torch.LongTensor((doc_id, cont_id, batch["label_id"][idx])).to(batch["label_id"][idx].device)
-            )
+                    # gather log-probs at continuation token indices but divide by domain conditional prob
+                    log_likelihood = (
+                        torch.gather(lm_cont_logits, 1, cont_tokens.unsqueeze(-1)).sum()
+                        / torch.gather(dc_lm_cont_logits, 1, cont_tokens.unsqueeze(-1)).sum()
+                    )
+                elif self.metric_type == "acc" or self.metric_type == "f1":
+                    # gather log-probs at continuation token indices
+                    log_likelihood = torch.gather(lm_cont_logits, 1, cont_tokens.unsqueeze(-1)).sum()
+                elif self.metric_type == "len_norm" or self.metric_type == "ce_loss":
+                    log_likelihood = (
+                        torch.gather(lm_cont_logits, 1, cont_tokens.unsqueeze(-1)).sum() / batch["cont_str_len"][idx]
+                    )
+                    if self.metric_type == "ce_loss":
+                        log_likelihood = -log_likelihood
+                else:
+                    raise ValueError(self.metric_type)
+
+                # because metric states cannot be dict/list of tuples, store this tuple as tensor: (doc_id, cont_id, metric_state)
+                self.loglikelihoods.append(
+                    torch.Tensor((doc_id, cont_id, log_likelihood)).to(batch["continuation"][idx].device)
+                )
+                self.labels.append(
+                    torch.LongTensor((doc_id, cont_id, batch["label_id"][idx])).to(batch["label_id"][idx].device)
+                )
 
     def compute(self) -> torch.Tensor:
+        if "exact_match" in self.metric_type:
+            return torch.tensor(sum(self.exact_match_scores) / len(self.exact_match_scores))
+
         # states should have been synced from all accelerators at this point
         # account for duplicates here because of DistributedSampler compensating for drop_last=False
         loglikelihood_dict: Dict[int, Dict[int, float]] = {}
@@ -1374,147 +1408,251 @@ class MathQA(ICLMultiChoiceTaskDataset):
 
     def doc_to_label(self, doc):
         # some doc["answerKey"] are stored as numbers
-        doc["correct"] = doc["correct"].upper()
-        num_to_letter = {"1": "A", "2": "B", "3": "C", "4": "D", "5": "E"}
+        num_to_letter = {"1": "a", "2": "b", "3": "c", "4": "d", "5": "e"}
 
         if doc["correct"] in num_to_letter:
             doc["correct"] = num_to_letter[doc["correct"]]
 
-        return ["A", "B", "C", "D", "E"].index(doc["correct"])
+        return ["a", "b", "c", "d", "e"].index(doc["correct"])
 
     def doc_to_domain_conditional(self, doc):
         del doc
         return "Answer:"
 
 
-# import os, json, pathlib
-# class HendrycksMath(datasets.GeneratorBasedBuilder):
-#     """
-#     12,500 competition Math problems
-#     8 Math question types, 5 levels of difficulty
-#     {'problem': 'A board game spinner is divided into three parts labeled $A$, $B$  and $C$. The probability of the spinner landing on $A$ is $\\frac{1}{3}$ and the probability of the spinner landing on $B$ is $\\frac{5}{12}$.  What is the probability of the spinner landing on $C$? Express your answer as a common fraction.',
-#     'level': 'Level 1',
-#     'type': 'Counting & Probability',
-#     'solution': 'The spinner is guaranteed to land on exactly one of the three regions, so we know that the sum of the probabilities of it landing in each region will be 1. If we let the probability of it landing in region $C$ be $x$, we then have the equation $1 = \\frac{5}{12}+\\frac{1}{3}+x$, from which we have $x=\\boxed{\\frac{1}{4}}$.'}
-#     """
-#     VERSION = datasets.Version("1.0.0")
+class ICLGenerationTaskDataset(metaclass=abc.ABCMeta):
+    """Tai adds: Base class for ICL generation tasks."""
 
-#     BUILDER_CONFIGS = [
-#         datasets.BuilderConfig(name=name, version=VERSION, description=name)
-#         for name in ["algebra", "counting_and_prob", "geometry", "intermediate_algebra", "num_theory", "prealgebra", "precalc", "asdiv"]
-#     ]
+    metric_type: str
 
-#     def _info(self):
-#         return datasets.DatasetInfo(
-#             description="12,500 competition Math problems with 8 types and 5 levels of difficulty.",
-#             features=datasets.Features(
-#                 {
-#                     "problem": datasets.Value("string"),
-#                     "level": datasets.Value("string"),
-#                     "type": datasets.Value("string"),
-#                     "solution": datasets.Value("string"),
-#                 }
-#             ),
-#         )
+    def __init__(
+        self,
+        tokenizer: Tokenizer,
+        dataset: datasets.Dataset,
+        model_ctx_len: int = 2048,
+        split="validation",
+        prompts=[None],  # List of prompt variants to use
+        stop_sequences=[],
+    ):
+        self.tokenizer = tokenizer
+        self.dataset = dataset
+        self.model_ctx_len = model_ctx_len
+        self.prompts = prompts
+        self.split = split
+        self.stop_sequences = stop_sequences
+        self.current_prompt = None
+        self.log_instances = 0  # Set to > 0 to log the first few instances as a sanity check
 
-#     def _split_generators(self, dl_manager):
-#         urls = {"data": "https://path_to_data"}
-#         data_dir = dl_manager.download_and_extract(urls["data"])
-#         return [
-#             datasets.SplitGenerator(
-#                 name=datasets.Split.TRAIN,
-#                 gen_kwargs={
-#                     "basepath": os.path.join(data_dir, "train"),
-#                     "split": "train",
-#                 },
-#             ),
-#             datasets.SplitGenerator(
-#                 name=datasets.Split.TEST,
-#                 gen_kwargs={
-#                     "basepath": os.path.join(data_dir, "test"),
-#                     "split": "test",
-#                 },
-#             ),
-#         ]
+        # Convert stop sequences to token IDs
+        self.stop_token_ids = [self.tokenizer.encode(seq, add_special_tokens=False) for seq in self.stop_sequences]
 
-#     def _generate_examples(self, basepath, split):
-#         key = 0
-#         for file in sorted(pathlib.Path(basepath).iterdir()):
-#             with open(file, "r", encoding="utf-8") as f:
-#                 data = json.load(f)
-#                 yield key, {
-#                     "problem": data["problem"],
-#                     "level": data["level"],
-#                     "type": data["type"],
-#                     "solution": data["solution"],
-#                 }
-#                 key += 1
+        # Prep examples
+        self.samples: List[Dict[str, Any]] = []
+        self.prep_examples()
 
-#     def __init__(self, tokenizer, dataset_path="hendrycks/competition_math", dataset_name=None, split="validation"):
-#         self.dataset_path = dataset_path
-#         self.dataset_name = dataset_name
-#         self.split = split
-#         self.tokenizer = tokenizer
-#         self.dev_set = {}
+    def __getitem__(self, index):
+        return self.samples[index]
 
-#         if dataset_name:
-#             dataset_names = [dataset_name]
-#         else:
-#             dataset_names = ["algebra", "counting_and_prob", "geometry", "intermediate_algebra", "num_theory", "prealgebra", "precalc", "asdiv"]
+    def __len__(self):
+        return len(self.samples)
 
-#         for name in dataset_names:
-#             self.dev_set[name] = datasets.load_dataset(
-#                 path=self.dataset_path, name=name, split=self.split, trust_remote_code=True
-#             )
+    def prep_examples(self):
+        """Append doc_ids to each example so that they are processed together in the metric"""
+        doc_id = 0
+        for doc in self.dataset:
+            for prompt in self.prompts:
+                self.current_prompt = prompt
 
-#     @classmethod
-#     def remove_boxed(s):
-#         if "\\boxed " in s:
-#             left = "\\boxed "
-#             assert s[: len(left)] == left
-#             return s[len(left) :]
+                doc_text = self.doc_to_text(doc)
+                label_gen_id = self.token_encode(self.doc_to_label(doc))
+                ctx = self.token_encode(doc_text)
+                dc = self.token_encode(self.doc_to_domain_conditional(doc))
+                if self.log_instances > 0:
+                    self.log_instances -= 1
+                    ds_name = self.dataset_name
+                    if isinstance(ds_name, list):
+                        ds_name = ds_name[0]
+                    log.info(
+                        f"Sample doc from ({self.dataset_path}, {ds_name}, {self.current_prompt}):"
+                        + f"\ndoc_text: {doc_text}"
+                    )
 
-#         left = "\\boxed{"
+                self.samples.append(
+                    {
+                        "doc_id": doc_id,
+                        "ctx": ctx,
+                        "dc_len": len(dc),
+                        "query": ctx,  # No continuation for generation tasks
+                        "dc_query": dc,
+                        "stop_token_ids": self.stop_token_ids,
+                        "label_gen_id": label_gen_id
+                    }
+                )
 
-#         assert s[: len(left)] == left
-#         assert s[-1] == "}"
+                doc_id += 1
 
-#         return s[len(left) : -1]
+    def pad_tokens_until_max(self, tokens, max_len=2048):
+        """Truncate from left if len(tokens) > model_ctx_len, max_len is not considered then
+        Queries are already truncated at max length of model_ctx_len
+        This acts as additional check for all types of sequences in the batch
+        """
+        if len(tokens) > self.model_ctx_len:
+            return tokens[-self.model_ctx_len :]
+        else:
+            # pad to max_len, but check again if this padding exceeded self.model_ctx_len
+            # this time truncate from right side of the sequence because additional padding caused len(tokens) > self.model_ctx_len
+            tokens = tokens + [self.tokenizer.pad_token_id] * (max_len - len(tokens))
 
-#     @classmethod
-#     def last_boxed_only_string(string):
-#         idx = string.rfind("\\boxed")
-#         if "\\boxed " in string:
-#             return "\\boxed " + string.split("\\boxed ")[-1].split("$")[0]
-#         if idx < 0:
-#             idx = string.rfind("\\fbox")
-#             if idx < 0:
-#                 return None
+            if len(tokens) > self.model_ctx_len:
+                tokens = tokens[: self.model_ctx_len]
 
-#         i = idx
-#         right_brace_idx = None
-#         num_left_braces_open = 0
-#         while i < len(string):
-#             if string[i] == "{":
-#                 num_left_braces_open += 1
-#             if string[i] == "}":
-#                 num_left_braces_open -= 1
-#                 if num_left_braces_open == 0:
-#                     right_brace_idx = i
-#                     break
-#             i += 1
+            return tokens
 
-#         if right_brace_idx is None:
-#             retval = None
-#         else:
-#             retval = string[idx : right_brace_idx + 1]
+    def collate_fn(self, data):
+        # pad to max length
+        # 'ctx' and 'query' can all have variable length
+        max_ctx_len = max(len(sample["ctx"]) for sample in data)
+        max_dc_query_len = max(len(sample["dc_query"]) for sample in data)
+        max_query_len = max(len(sample["query"]) for sample in data)
 
-#         return retval
+        doc_ids = []
+        ctxs = []
+        ctx_lens = []
+        dc_lens = []
+        queries = []
+        dc_queries = []
+        stop_token_ids = []
+        label_gen_ids = []
 
-#     def doc_to_text(self, doc):
-#         problem = doc["problem"].strip()
-#         solution = doc["solution"].strip()
-#         return f"Problem: {problem}\nAnswer: {solution}\n"
+        # pad according to max_lengths
+        for sample in data:
+            doc_ids.append(sample["doc_id"])
+
+            ctx = sample["ctx"] + [self.tokenizer.pad_token_id] * (max_ctx_len - len(sample["ctx"]))
+            dc_query = sample["dc_query"] + [self.tokenizer.pad_token_id] * (max_dc_query_len - len(sample["dc_query"]))
+
+            ctxs.append(torch.LongTensor(ctx))
+            dc_queries.append(torch.LongTensor(dc_query))
+
+            ctx_lens.append(len(sample["ctx"]))
+            dc_lens.append(sample["dc_len"])
+
+            queries.append(torch.LongTensor(self.pad_tokens_until_max(sample["query"], max_len=max_query_len)))  # Since query is the same as ctx in this case
+            stop_token_ids.append(sample["stop_token_ids"])  # Append stop sequences
+            label_gen_ids.append(sample["label_gen_id"])  # Append stop sequences
+
+        batch = {
+            "doc_id": torch.LongTensor(doc_ids),
+            "ctx": torch.stack(ctxs),
+            "ctx_len": torch.LongTensor(ctx_lens),
+            "dc_len": torch.LongTensor(dc_lens),
+            "input_ids": torch.stack(queries),
+            "dc_input_ids": torch.stack(dc_queries),
+            "stop_token_ids": stop_token_ids,  # TODO: Currently having individual stop sequences to the batch, but they could share
+            "label_gen_ids": label_gen_ids
+        }
+        return batch
+
+    def token_encode(self, string: str) -> List[int]:
+        return self.tokenizer.encode(string, add_special_tokens=False)
+
+    def token_decode(self, tokens: List[int]) -> str:
+        return self.tokenizer.decode(tokens)
+
+    @abc.abstractmethod
+    def doc_to_text(self, doc) -> str:
+        """Match EAI eval harness
+        returns a single context string
+        """
+        raise NotImplementedError
+
+    @abc.abstractmethod
+    def doc_to_label(self, doc) -> int:
+        """Match EAI eval harness
+        returns continuation id which corresponds to true label
+        """
+        raise NotImplementedError
+
+    def doc_to_domain_conditional(self, doc) -> str:
+        """Provide string for domain conditional normalization
+        by default its blank string, continuation normalized by prob conditioned on a blank
+        """
+        del doc
+        return " "
+
+
+class HendrycksMath(ICLGenerationTaskDataset):
+    """
+    Tai adds: HendrycksMath Dataset includes 8 sub types.
+    {
+        'problem': 'A board game spinner is divided into three parts labeled $A$, $B$  and $C$. The probability of the spinner landing on $A$ is $\\frac{1}{3}$ and the probability of the spinner landing on $B$ is $\\frac{5}{12}$.  What is the probability of the spinner landing on $C$? Express your answer as a common fraction.',
+        'level': 'Level 1',
+        'type': 'Counting & Probability',
+        'solution': 'The spinner is guaranteed to land on exactly one of the three regions, so we know that the sum of the probabilities of it landing in each region will be 1. If we let the probability of it landing in region $C$ be $x$, we then have the equation $1 = \\frac{5}{12}+\\frac{1}{3}+x$, from which we have $x=\\boxed{\\frac{1}{4}}$.'
+    }
+    """
+    metric_type = "exact_match_hendrycks_math"
+    DATASET_NAMES = ["algebra", "counting_and_probability", "geometry", "intermediate_algebra", "number_theory", "prealgebra", "precalculus"]
+
+    def __init__(self, tokenizer, sample_size=250, dataset_path="hendrycks/competition_math", dataset_name=None, split="test", stop_sequences=["Problem:"]):
+        self.tokenizer = tokenizer
+        self.sample_size = sample_size
+        dataset = self.load_dataset(dataset_name, split)
+        super().__init__(tokenizer, dataset, model_ctx_len=2048, split=split, prompts=[None], stop_sequences=stop_sequences)
+
+    def load_dataset(self, dataset_name, split):
+        dataset_names = self._get_dataset_names(dataset_name)
+        datasets_dict = {}
+
+        url = "https://huggingface.co/datasets/hendrycks/competition_math/resolve/main/data/MATH.zip"
+        data_dir = "data_hendrycks"
+
+        if not os.path.exists(data_dir):
+            os.makedirs(data_dir)
+            response = requests.get(url)
+            with zipfile.ZipFile(io.BytesIO(response.content)) as z:
+                z.extractall(data_dir)
+
+        for name in dataset_names:
+            basepath = os.path.join(data_dir, "MATH", split, name)
+            datasets_dict[name] = self._generate_examples(basepath)
+
+        combined_dataset = datasets.concatenate_datasets(list(datasets_dict.values()))
+        return combined_dataset
+
+    def _get_dataset_names(self, dataset_name):
+        if dataset_name:
+            if dataset_name in self.DATASET_NAMES:
+                return [dataset_name]
+            else:
+                raise ValueError(f"Unknown dataset name: {dataset_name}")
+        return self.DATASET_NAMES
+
+    def _generate_examples(self, basepath):
+        examples = []
+        json_paths = sorted(pathlib.Path(basepath).iterdir())[:self.sample_size]
+        for file in json_paths:
+            with open(file, "r", encoding="utf-8") as f:
+                data = json.load(f)
+                examples.append({
+                    "problem": data["problem"],
+                    "level": data["level"],
+                    "type": data["type"],
+                    "solution": data["solution"],
+                })
+        return datasets.Dataset.from_list(examples)
+
+    def doc_to_text(self, doc):
+        return (
+            f"Problem: {doc['problem']}\nAnswer: {doc['solution']}"
+        )
+
+    def doc_to_label(self, doc):
+        return doc["solution"]
+
+    def doc_to_domain_conditional(self, doc):
+        del doc
+        return "Answer:"
 
 
 label_to_task_map = {
@@ -1575,4 +1713,11 @@ label_to_task_map = {
 
     # Tai: Adds Math tasks
     "mathqa": MathQA,
+    "math_algebra": (HendrycksMath, {"dataset_name": "algebra", "stop_sequences": HENDRYCKS_STOP_SEQS}),
+    "math_counting_and_prob": (HendrycksMath, {"dataset_name": "counting_and_probability", "stop_sequences": HENDRYCKS_STOP_SEQS}),
+    "math_geometry": (HendrycksMath, {"dataset_name": "geometry", "stop_sequences": HENDRYCKS_STOP_SEQS}),
+    "math_intermediate_algebra": (HendrycksMath, {"dataset_name": "intermediate_algebra", "stop_sequences": HENDRYCKS_STOP_SEQS}),
+    "math_num_theory": (HendrycksMath, {"dataset_name": "number_theory", "stop_sequences": HENDRYCKS_STOP_SEQS}),
+    "math_prealgebra": (HendrycksMath, {"dataset_name": "prealgebra", "stop_sequences": HENDRYCKS_STOP_SEQS}),
+    "math_precalc": (HendrycksMath, {"dataset_name": "precalculus", "stop_sequences": HENDRYCKS_STOP_SEQS})
 }

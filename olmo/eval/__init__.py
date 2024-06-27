@@ -56,7 +56,7 @@ def build_downstream_evaluator(
         persistent_workers=data_config.persistent_workers,
         timeout=data_config.timeout,
     )
-    metric = ICLMetric(metric_type=ds_eval_dataset.metric_type)
+    metric = ICLMetric(tokenizer=tokenizer, metric_type=ds_eval_dataset.metric_type)
 
     evaluator = Evaluator(
         label=eval_cfg.label,

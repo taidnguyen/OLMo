@@ -774,8 +774,17 @@ class Trainer:
 
     def eval_batch(self, batch: Dict[str, Any]) -> Tuple[torch.Tensor, torch.Tensor]:
         with torch.autocast("cuda", enabled=True, dtype=self.cfg.autocast_precision):
-            ce_loss, _, logits = self.model_forward(batch, loss_reduction="none")
-        return ce_loss.mean(dim=-1), logits
+            if "label_id" in batch:
+                ce_loss, _, logits = self.model_forward(batch, loss_reduction="none")
+                return ce_loss.mean(dim=-1), logits
+            else:
+                # gen_ids = self.model_generate_until(batch, max_length=2048)
+                gen_ids = self.fsdp_model.generate(
+                    input_ids=batch["input_ids"],
+                    attention_mask=batch.get("attention_mask")
+                ).token_ids
+                batch["generation_ids"] = gen_ids
+                return torch.tensor(0.0), gen_ids
 
     def eval_step(self, batch: Dict[str, Any], evaluator: Evaluator) -> None:
         # Move tensors to the right device.
