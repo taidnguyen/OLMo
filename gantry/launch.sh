@@ -9,6 +9,9 @@ ABLATION_GROUPS=("baseline")
 MODEL_SIZES=("olmo-11m")
 YMD="2024-07-19"
 
+# Ensure train.sh is executable
+chmod +x gantry/train.sh
+
 for GROUP in "${ABLATION_GROUPS[@]}"; do
     for MODEL in "${MODEL_SIZES[@]}"; do
 
