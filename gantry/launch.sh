@@ -3,10 +3,8 @@ set -ex
 
 NUM_NODES=1
 
-# ABLATION_GROUPS=("baseline" "no_code" "no_math" "no_flan" "no_wiki")
-# MODEL_SIZES=("olmo-11m" "olmo-86m" "olmo-156m" "olmo-508m")
-ABLATION_GROUPS=("baseline")
-MODEL_SIZES=("olmo-11m")
+ABLATION_GROUPS=("baseline" "no_code" "no_math" "no_flan" "no_wiki")
+MODEL_SIZES=("olmo-11m" "olmo-86m" "olmo-156m" "olmo-508m")
 YMD="2024-07-19"
 
 # Ensure train.sh is executable
