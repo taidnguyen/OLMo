@@ -453,6 +453,21 @@ data:
   - s3://ai2-llm/preprocessed/olmo-mix/v1-7/documents/superhigh-25/cc_en_tail/allenai_gpt-neox-olmo-dolma-v1_5/part-002-00000.npy
   - s3://ai2-llm/preprocessed/olmo-mix/v1-7/documents/superhigh-25/cc_en_tail/allenai_gpt-neox-olmo-dolma-v1_5/part-003-00000.npy
   - s3://ai2-llm/preprocessed/olmo-mix/v1-7/documents/superhigh-25/cc_en_tail/allenai_gpt-neox-olmo-dolma-v1_5/part-004-00000.npy
+  - s3://ai2-llm/preprocessed/starcoder/v0_decontaminated_doc_only/gpt-neox-olmo-dolma-v1_5/part-00-00000.npy
+  - s3://ai2-llm/preprocessed/starcoder/v0_decontaminated_doc_only/gpt-neox-olmo-dolma-v1_5/part-00-00001.npy
+  - s3://ai2-llm/preprocessed/starcoder/v0_decontaminated_doc_only/gpt-neox-olmo-dolma-v1_5/part-01-00000.npy
+  - s3://ai2-llm/preprocessed/starcoder/v0_decontaminated_doc_only/gpt-neox-olmo-dolma-v1_5/part-02-00000.npy
+  - s3://ai2-llm/preprocessed/starcoder/v0_decontaminated_doc_only/gpt-neox-olmo-dolma-v1_5/part-03-00000.npy
+  - s3://ai2-llm/preprocessed/starcoder/v0_decontaminated_doc_only/gpt-neox-olmo-dolma-v1_5/part-03-00001.npy
+  - s3://ai2-llm/preprocessed/starcoder/v0_decontaminated_doc_only/gpt-neox-olmo-dolma-v1_5/part-04-00000.npy
+  - s3://ai2-llm/preprocessed/starcoder/v0_decontaminated_doc_only/gpt-neox-olmo-dolma-v1_5/part-04-00001.npy
+  - s3://ai2-llm/preprocessed/starcoder/v0_decontaminated_doc_only/gpt-neox-olmo-dolma-v1_5/part-05-00000.npy
+  - s3://ai2-llm/preprocessed/starcoder/v0_decontaminated_doc_only/gpt-neox-olmo-dolma-v1_5/part-05-00001.npy
+  - s3://ai2-llm/preprocessed/starcoder/v0_decontaminated_doc_only/gpt-neox-olmo-dolma-v1_5/part-06-00000.npy
+  - s3://ai2-llm/preprocessed/starcoder/v0_decontaminated_doc_only/gpt-neox-olmo-dolma-v1_5/part-06-00001.npy
+  - s3://ai2-llm/preprocessed/starcoder/v0_decontaminated_doc_only/gpt-neox-olmo-dolma-v1_5/part-07-00000.npy
+  - s3://ai2-llm/preprocessed/starcoder/v0_decontaminated_doc_only/gpt-neox-olmo-dolma-v1_5/part-07-00001.npy
+  - s3://ai2-llm/preprocessed/starcoder/v0_decontaminated_doc_only/gpt-neox-olmo-dolma-v1_5/part-08-00000.npy
   - s3://ai2-llm/preprocessed/proof-pile-2/v0_decontaminated/algebraic-stack/train/gpt-neox-olmo-dolma-v1_5/part-00-00000.npy
   - s3://ai2-llm/preprocessed/proof-pile-2/v0_decontaminated/algebraic-stack/train/gpt-neox-olmo-dolma-v1_5/part-01-00000.npy
   - s3://ai2-llm/preprocessed/proof-pile-2/v0_decontaminated/algebraic-stack/train/gpt-neox-olmo-dolma-v1_5/part-02-00000.npy
@@ -623,7 +638,7 @@ fsdp:
   wrapping_strategy: by_block_and_size
 global_train_batch_size: 1024
 load_path: null
-max_duration: 230e9T
+max_duration: 162e9T
 max_grad_norm: 1.0
 max_grad_norm_ratio: null
 model:
@@ -635,7 +650,7 @@ model:
   bias_for_layer_norm: false
   block_type: sequential
   clip_qkv: 8.0
-  d_model: 96
+  d_model: 576
   embedding_dropout: 0.0
   embedding_size: 50304
   eos_token_id: 0
@@ -646,10 +661,10 @@ model:
   layer_norm_type: default
   layer_norm_with_affine: false
   max_sequence_length: 2048
-  mlp_ratio: 4
+  mlp_ratio: 8
   multi_query_attention: false
-  n_heads: 4
-  n_layers: 8
+  n_heads: 8
+  n_layers: 24
   pad_token_id: 1
   residual_dropout: 0.0
   rope: false
@@ -672,9 +687,9 @@ remote_save_folder: s3://ai2-llm/checkpoints/benb/${run_name}
 reset_optimizer_state: false
 reset_trainer_state: false
 restore_dataloader: false
-run_name: no_code_olmo-11m_2024-07-20
+run_name: baseline_olmo-156m_2024-07-21
 save_folder: /data/tain
-save_interval: 34636
+save_interval: 2442
 save_interval_unsharded: ${save_interval}
 save_num_checkpoints_to_keep: -1
 save_num_unsharded_checkpoints_to_keep: -1
@@ -682,22 +697,22 @@ save_overwrite: true
 scheduler:
   alpha_f: 0.1
   grad_clip_warmup_factor: 5
-  grad_clip_warmup_steps: 769696969696666.0
+  grad_clip_warmup_steps: 54273504273333.0
   name: cosine_with_warmup
-  t_max: 2.30909090909e+16
-  t_warmup: 1539393939393333.0
+  t_max: 1628205128200000.0
+  t_warmup: 108547008546666.0
   units: tokens
 seed: 61394
 sharded_checkpointer: olmo_core
 speed_monitor:
   window_size: 1
-stop_at: 1101070
+stop_at: 150000
 time_limit: null
 tokenizer:
   identifier: tokenizers/allenai_gpt-neox-olmo-dolma-v1_5.json
   truncate_direction: right
 wandb:
   entity: predict-data-ablations
-  group: olmo-11m
-  name: no_code_olmo-11m_2024-07-20
+  group: olmo-156m
+  name: baseline_olmo-156m_2024-07-21
   project: predict-data-ablations
