@@ -3,31 +3,30 @@ set -ex
 
 NUM_NODES=1
 
-# ABLATION_GROUPS=("baseline" "no_code" "no_math" "no_flan" "no_wiki")
-# MODEL_SIZES=("olmo-11m" "olmo-86m" "olmo-156m" "olmo-508m")
-# YMD="2024-07-20"
+ABLATION_GROUPS=("baseline" "no_code" "no_math" "no_flan" "no_wiki")
+# ABLATION_GROUPS=("baseline")
+# "olmo-86m"
+MODEL_SIZES=("olmo-508m" "olmo-156m" "olmo-11m")
+YMD="2024-07-21"
 
-ABLATION_GROUPS=("no_math")
-MODEL_SIZES=("olmo-86m")
-YMD="2024-07-19"
-# YMD="2024-07-20"
+# ABLATION_GROUPS=("no_math")
+# MODEL_SIZES=("olmo-86m")
 
 # Ensure train.sh is executable
 chmod +x gantry/train.sh
 
-for GROUP in "${ABLATION_GROUPS[@]}"; do
-    for MODEL in "${MODEL_SIZES[@]}"; do
-
+for MODEL in "${MODEL_SIZES[@]}"; do
+    for GROUP in "${ABLATION_GROUPS[@]}"; do
         RUN_NAME="${GROUP}_${MODEL}"
         CONFIG_PATH="configs/tain/${YMD}/${GROUP}_${MODEL}.yaml"
 
         # Tai: don't have permission for priority "high"
         # Launch gantry
         gantry run \
-          --workspace ai2/cheap_decisions \
+          --workspace ai2/tain\
           --task-name data-decisions \
           --description "cheap data decisions" \
-          --priority high \
+          --priority normal \
           --preemptible \
           --beaker-image tain/olmo-tai \
           --cluster ai2/jupiter-cirrascale-2 \
