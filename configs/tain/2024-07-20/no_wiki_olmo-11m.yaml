@@ -565,7 +565,7 @@ model:
   embedding_dropout: 0.0
   embedding_size: 50304
   eos_token_id: 0
-  flash_attention: true
+  flash_attention: false
   include_bias: false
   init_device: meta
   init_fn: mitchell
@@ -624,5 +624,7 @@ tokenizer:
   truncate_direction: right
 wandb:
   entity: predict-data-ablations
+  group: no_wiki
+  model_name: olmo-11m
   name: no_wiki_olmo-11m_2024-07-20
   project: predict-data-ablations

@@ -3,9 +3,14 @@ set -ex
 
 NUM_NODES=1
 
-ABLATION_GROUPS=("baseline" "no_code" "no_math" "no_flan" "no_wiki")
-MODEL_SIZES=("olmo-11m" "olmo-86m" "olmo-156m" "olmo-508m")
+# ABLATION_GROUPS=("baseline" "no_code" "no_math" "no_flan" "no_wiki")
+# MODEL_SIZES=("olmo-11m" "olmo-86m" "olmo-156m" "olmo-508m")
+# YMD="2024-07-20"
+
+ABLATION_GROUPS=("no_math")
+MODEL_SIZES=("olmo-86m")
 YMD="2024-07-19"
+# YMD="2024-07-20"
 
 # Ensure train.sh is executable
 chmod +x gantry/train.sh
@@ -19,10 +24,10 @@ for GROUP in "${ABLATION_GROUPS[@]}"; do
         # Tai: don't have permission for priority "high"
         # Launch gantry
         gantry run \
-          --workspace ai2/tain \
+          --workspace ai2/cheap_decisions \
           --task-name data-decisions \
           --description "cheap data decisions" \
-          --priority normal \
+          --priority high \
           --preemptible \
           --beaker-image tain/olmo-tai \
           --cluster ai2/jupiter-cirrascale-2 \
@@ -45,7 +50,7 @@ for GROUP in "${ABLATION_GROUPS[@]}"; do
           --yes \
           --timeout=-1 \
           --allow-dirty \
-          -- /bin/bash -c "gantry/train.sh \$BEAKER_LEADER_REPLICA_HOSTNAME ${NUM_NODES} \$BEAKER_REPLICA_RANK ${CONFIG_PATH}"
+          -- /bin/bash -c "gantry/train.sh \$BEAKER_LEADER_REPLICA_HOSTNAME ${NUM_NODES} \$BEAKER_REPLICA_RANK ${CONFIG_PATH}" &
 
         echo "Started training for tain/${YMD}/${GROUP}_${MODEL}"
     done

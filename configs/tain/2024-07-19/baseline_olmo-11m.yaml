@@ -654,7 +654,7 @@ model:
   embedding_dropout: 0.0
   embedding_size: 50304
   eos_token_id: 0
-  flash_attention: true
+  flash_attention: false
   include_bias: false
   init_device: meta
   init_fn: mitchell
@@ -687,7 +687,7 @@ remote_save_folder: s3://ai2-llm/checkpoints/benb/${run_name}
 reset_optimizer_state: false
 reset_trainer_state: false
 restore_dataloader: false
-run_name: baseline_olmo-11m_2024-07-19
+run_name: baseline_olmo-11m_2024-07-20
 save_folder: /data/tain
 save_interval: 34636
 save_interval_unsharded: ${save_interval}
@@ -697,10 +697,10 @@ save_overwrite: true
 scheduler:
   alpha_f: 0.1
   grad_clip_warmup_factor: 5
-  grad_clip_warmup_steps: 76969696969
+  grad_clip_warmup_steps: 769696969696666.0
   name: cosine_with_warmup
-  t_max: 2309090909090
-  t_warmup: 153939393939
+  t_max: 2.30909090909e+16
+  t_warmup: 1539393939393333.0
   units: tokens
 seed: 61394
 sharded_checkpointer: olmo_core
@@ -713,5 +713,7 @@ tokenizer:
   truncate_direction: right
 wandb:
   entity: predict-data-ablations
-  name: baseline_olmo-11m_2024-07-19
+  group: baseline
+  model_name: olmo-11m
+  name: baseline_olmo-11m_2024-07-20
   project: predict-data-ablations
