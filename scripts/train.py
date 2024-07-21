@@ -48,6 +48,7 @@ log = logging.getLogger("train")
 
 
 def main(cfg: TrainConfig) -> None:
+    cfg.save_overwrite = True
     # Ensure run name set.
     if cfg.run_name is None:
         raise OLMoConfigurationError("--run_name is required")

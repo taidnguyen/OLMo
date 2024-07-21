@@ -472,12 +472,10 @@ class Trainer:
                 self.trainer_state_dict(),
                 upload_to=remote_checkpoint_dir,
             )
-        except Exception as e:
-            print(f"Error saving checkpoint: {e}")
-        # except FileExistsError:
-        #     raise OLMoConfigurationError(
-        #         f"Checkpoint for step {self.global_step} already exists, use --save-overwrite to overwrite it"
-        #     )
+        except FileExistsError:
+            raise OLMoConfigurationError(
+                f"Checkpoint for step {self.global_step} already exists, use --save-overwrite to overwrite it"
+            )
 
         if link_latest:
             # Link to 'latest'.
