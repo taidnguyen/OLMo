@@ -1917,7 +1917,7 @@ class OlmoCoreCheckpointer(Checkpointer):
         from olmo_core.distributed.checkpoint import (  # type: ignore
             save_model_and_optim_state,
         )
-
+        print(f"\nOLMO CORE checkpoint save_overwrite: {self.cfg.save_overwrite}\n")
         with self._temporary_wd(dir) as checkpoint_dir:
             log.info("Saving model and optim state...")
             if get_fs_local_rank() == 0:

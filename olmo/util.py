@@ -352,6 +352,7 @@ def upload(source: PathOrStr, target: str, save_overwrite: bool = False):
     source = Path(source)
     assert source.is_file()
     parsed = urlparse(target)
+    print("upload: ", save_overwrite)
     if parsed.scheme == "gs":
         _gcs_upload(source, parsed.netloc, parsed.path.strip("/"), save_overwrite=save_overwrite)
     elif parsed.scheme in ("s3", "r2", "weka"):
@@ -520,6 +521,7 @@ def _s3_upload(
     source: Path, scheme: str, bucket_name: str, key: str, save_overwrite: bool = False, max_attempts: int = 3
 ):
     err: Optional[Exception] = None
+    print("_S3_upload: ", save_overwrite)
     if not save_overwrite:
         for attempt in range(1, max_attempts + 1):
             try:
