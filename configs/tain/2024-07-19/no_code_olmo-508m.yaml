@@ -698,7 +698,6 @@ tokenizer:
   truncate_direction: right
 wandb:
   entity: predict-data-ablations
-  group: no_code
-  model_name: olmo-508m
+  group: olmo-508m
   name: no_code_olmo-508m_2024-07-20
   project: predict-data-ablations

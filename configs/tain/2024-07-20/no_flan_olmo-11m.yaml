@@ -647,7 +647,6 @@ tokenizer:
   truncate_direction: right
 wandb:
   entity: predict-data-ablations
-  group: no_flan
-  model_name: olmo-11m
+  group: olmo-11m
   name: no_flan_olmo-11m_2024-07-20
   project: predict-data-ablations
