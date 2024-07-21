@@ -414,7 +414,7 @@ def find_latest_checkpoint(dir: PathOrStr) -> Optional[PathOrStr]:
         return latest_checkpoint
 
 
-def _gcs_upload(source: Path, bucket_name: str, key: str, save_overwrite: bool = False):
+def _gcs_upload(source: Path, bucket_name: str, key: str, save_overwrite: bool = True):
     from google.cloud import storage as gcs
 
     storage_client = gcs.Client()
@@ -517,7 +517,7 @@ def _wait_before_retry(attempt: int):
 
 
 def _s3_upload(
-    source: Path, scheme: str, bucket_name: str, key: str, save_overwrite: bool = False, max_attempts: int = 3
+    source: Path, scheme: str, bucket_name: str, key: str, save_overwrite: bool = True, max_attempts: int = 3
 ):
     err: Optional[Exception] = None
     if not save_overwrite:

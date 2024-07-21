@@ -101,7 +101,7 @@ def save_fsdp_model_and_optim_state(
     optim: Optimizer,
     *,
     upload_to: Optional[str] = None,
-    save_overwrite: bool = False,
+    save_overwrite: bool = True,
 ):
     """
     Use this to save a state dict for an FSDP model and its optimizer via :module:`torch.distributed.checkpoint`
@@ -248,7 +248,7 @@ def save_state_dict(
     state_dict: Dict[str, Any],
     *,
     upload_to: Optional[str] = None,
-    save_overwrite: bool = False,
+    save_overwrite: bool = True,
     synchronize: bool = True,
 ):
     """
@@ -344,7 +344,7 @@ class RemoteFileSystemWriter(dist_cp.FileSystemWriter):
         thread_count: Optional[int] = None,
         per_thread_copy_ahead: int = 10_000_000,
         upload_to: Optional[str] = None,
-        save_overwrite: bool = False,
+        save_overwrite: bool = True,
     ) -> None:
         if thread_count is not None and thread_count <= 0:
             raise ValueError("thread count must be at least 1")
