@@ -636,7 +636,7 @@ evaluators:
 fsdp:
   precision: mixed
   wrapping_strategy: by_block_and_size
-global_train_batch_size: 1024
+global_train_batch_size: 512
 load_path: null
 load_path_sharded_checkpointer: olmo_core
 max_duration: 50e9T
@@ -655,7 +655,7 @@ model:
   embedding_dropout: 0.0
   embedding_size: 50304
   eos_token_id: 0
-  flash_attention: false
+  flash_attention: true
   include_bias: false
   init_device: meta
   init_fn: mitchell
