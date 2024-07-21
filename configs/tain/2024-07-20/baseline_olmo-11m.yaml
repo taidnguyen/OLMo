@@ -689,7 +689,7 @@ reset_trainer_state: false
 restore_dataloader: false
 run_name: baseline_olmo-11m_2024-07-20
 save_folder: /data/tain
-save_interval: 34636
+save_interval: 1
 save_interval_unsharded: ${save_interval}
 save_num_checkpoints_to_keep: -1
 save_num_unsharded_checkpoints_to_keep: -1
