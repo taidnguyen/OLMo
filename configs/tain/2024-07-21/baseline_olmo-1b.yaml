@@ -715,5 +715,5 @@ tokenizer:
 wandb:
   entity: predict-data-ablations
   group: olmo-1b
-  name: baseline_olmo-1b_2024-07-25
+  name: baseline_olmo-1b_2024-07-21
   project: predict-data-ablations
