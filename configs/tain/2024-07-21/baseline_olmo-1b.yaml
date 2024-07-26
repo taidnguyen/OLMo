@@ -637,7 +637,7 @@ fsdp:
   precision: mixed
   wrapping_strategy: by_block_and_size
 global_train_batch_size: 512
-load_path: null
+load_path: ${path.last_checkpoint:s3://ai2-llm/checkpoints/benb/baseline_olmo-1b_2024-07-21}
 load_path_sharded_checkpointer: olmo_core
 max_duration: 254e9T
 max_grad_norm: 1.0
@@ -687,7 +687,7 @@ precision: amp_bf16
 remote_save_folder: s3://ai2-llm/checkpoints/benb/${run_name}
 reset_optimizer_state: false
 reset_trainer_state: false
-restore_dataloader: false
+restore_dataloader: true
 run_name: baseline_olmo-1b_2024-07-21
 save_folder: /data/tain/${run_name}
 save_interval: 762
