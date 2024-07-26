@@ -650,10 +650,10 @@ save_overwrite: true
 scheduler:
   alpha_f: 0.1
   grad_clip_warmup_factor: 5
-  grad_clip_warmup_steps: 2097152000
+  grad_clip_warmup_steps: 8466666666666.0
   name: cosine_with_warmup
-  t_max: 1000000000000.0
-  t_warmup: 10485760000
+  t_max: 254000000000000.0
+  t_warmup: 16933333333333.0
   units: tokens
 seed: 61394
 sharded_checkpointer: olmo_core
